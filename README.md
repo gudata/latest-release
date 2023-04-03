@@ -8,5 +8,5 @@ it is chatgpt code
 it works as python or golang executable
 
 ```
- ./latest-release https://github.com/casey/just/releases/tag/1.13.0
+ ./latest-release https://github.com/gudata/latest-release/releases/tag/1.0
 ```
