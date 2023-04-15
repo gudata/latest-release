@@ -12,6 +12,11 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run main.go <github-repo-url>")
+		os.Exit(1)
+	}
+
 	repoURL := os.Args[1]
 
 	re := regexp.MustCompile(`github.com/([^/]+)/([^/]+).*$`)
@@ -64,16 +69,26 @@ func main() {
 	}
 
 	// Loop through the download links and find the one for Linux x86_64
-	fmt.Println(downloadLinks)
+	// fmt.Println(downloadLinks)
 	var downloadLink string
-	for _, link := range downloadLinks {
+	fmt.Println("Available releases:")
+	for i, link := range downloadLinks {
 		path := link[1]
-		if (pathContains(path, "x86_64") || pathContains(path, "amd64") || pathContains(path, "musl")) && pathContains(path, "linux") {
-			fmt.Printf("Matched string: %s\n", path)
-			downloadLink = fmt.Sprintf("https://github.com%s", path)
-			break
-		}
+		fmt.Printf("[%d]: %s\n", i, path)
 	}
+
+	var choice int
+	fmt.Print("Enter the number of the release you want to download: ")
+	fmt.Scanln(&choice)
+
+	if choice < 1 || choice > len(downloadLinks) {
+		fmt.Println("Invalid choice")
+		os.Exit(1)
+	}
+
+	downloadLink = fmt.Sprintf("https://github.com%s", downloadLinks[choice][1])
+	fmt.Printf("Downloading %s\n", downloadLink)
+
 	if downloadLink == "" {
 		fmt.Println("No match found")
 		os.Exit(1)
